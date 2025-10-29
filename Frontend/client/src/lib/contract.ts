@@ -1,0 +1,5 @@
+﻿import LandTokenizationArtifact from "../LandTokenization.json";
+
+export const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || "0x991A529358D2dEc2Afc3E45800205fFC602f0586";
+
+export const CONTRACT_ABI = LandTokenizationArtifact.abi;
