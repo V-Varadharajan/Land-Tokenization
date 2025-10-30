@@ -44,6 +44,7 @@ export function useAllLandProjects() {
             basePrice: weiToEther(project.basePrice),
             imageUrl: project.imageHash || "",
             contactNumber: project.contactNumber,
+            description: project.description,
             active: project.active,
           };
         })
@@ -90,6 +91,7 @@ export function useLandProject(landId: number) {
         basePrice: weiToEther(blockchainProject.basePrice),
         imageUrl: blockchainProject.imageHash || "",
         contactNumber: blockchainProject.contactNumber,
+        description: blockchainProject.description,
         active: blockchainProject.active,
       };
       
@@ -133,7 +135,8 @@ export function useProjectPlots(landId: number, numPlots: number, contractOwnerA
             const isPrimarySale = await isAvailableForPrimarySale(tokenId);
             
             let status: "available" | "listed" | "sold";
-            if (isPrimarySale && owner.toLowerCase() === contractOwnerAddress.toLowerCase()) {
+            if (isPrimarySale) {
+              // Plot is available for primary sale (owned by contract, not yet sold)
               status = "available";
             } else if (Number(resalePrice) > 0) {
               status = "listed";

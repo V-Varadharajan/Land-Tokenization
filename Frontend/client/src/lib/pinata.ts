@@ -13,8 +13,6 @@ export async function uploadImageToPinata(file: File): Promise<PinataUploadRespo
     throw new Error("Pinata credentials are not configured. Please set VITE_PINATA_JWT or VITE_PINATA_API_KEY/VITE_PINATA_API_SECRET in .env file.");
   }
 
-  console.log('[Pinata Upload] Starting upload for file:', file.name, 'Size:', file.size);
-
   const formData = new FormData();
   formData.append("file", file);
 
@@ -30,13 +28,9 @@ export async function uploadImageToPinata(file: File): Promise<PinataUploadRespo
   if (PINATA_API_KEY && PINATA_API_SECRET) {
     headers.pinata_api_key = PINATA_API_KEY;
     headers.pinata_secret_api_key = PINATA_API_SECRET;
-    console.log('[Pinata Upload] Using API Key authentication');
   } else if (PINATA_JWT) {
     headers.Authorization = `Bearer ${PINATA_JWT}`;
-    console.log('[Pinata Upload] Using JWT authentication');
   }
-
-  console.log('[Pinata Upload] Sending request to Pinata API...');
 
   try {
     const response = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {

@@ -6,11 +6,17 @@ import { WalletProvider } from "@/contexts/WalletContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import Dashboard from "@/pages/Dashboard";
 import BrowseProjects from "@/pages/BrowseProjects";
 import ProjectDetails from "@/pages/ProjectDetails";
 import MyPlots from "@/pages/MyPlots";
 import OwnerPanel from "@/pages/OwnerPanel";
+import Documentation from "@/pages/Documentation";
+import HelpCenter from "@/pages/HelpCenter";
+import TermsOfService from "@/pages/TermsOfService";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import AboutUs from "@/pages/AboutUs";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +27,11 @@ function Router() {
       <Route path="/project/:id" component={ProjectDetails} />
       <Route path="/my-plots" component={MyPlots} />
       <Route path="/owner" component={OwnerPanel} />
+      <Route path="/docs" component={Documentation} />
+      <Route path="/help" component={HelpCenter} />
+      <Route path="/terms" component={TermsOfService} />
+      <Route path="/privacy" component={PrivacyPolicy} />
+      <Route path="/about" component={AboutUs} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -31,9 +42,12 @@ function App() {
     <ThemeProvider>
       <WalletProvider>
         <TooltipProvider>
-          <div className="min-h-screen bg-background">
+          <div className="flex flex-col min-h-screen bg-background">
             <Navbar />
-            <Router />
+            <main className="flex-1">
+              <Router />
+            </main>
+            <Footer />
           </div>
           <Toaster />
           <ToastContainer 

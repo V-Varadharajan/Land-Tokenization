@@ -47,7 +47,6 @@ export default function SearchFilterBar({
     onSearch("");
     onFilterLocation("All Locations");
     onFilterPrice("all");
-    console.log("Filters cleared");
   };
 
   return (

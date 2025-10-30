@@ -128,7 +128,8 @@ export async function getPlotOwner(tokenId: number): Promise<string> {
 
 export async function getResalePrice(tokenId: number): Promise<bigint> {
   const contract = await getReadOnlyContract();
-  return await contract.getResalePrice(tokenId);
+  const listing = await contract.getResaleListing(tokenId);
+  return listing.price; // getResaleListing returns {seller, price}
 }
 
 export async function isAvailableForPrimarySale(tokenId: number): Promise<boolean> {
@@ -219,10 +220,39 @@ export async function mintPlot(landId: number) {
   return await tx.wait();
 }
 
+export async function mintPlotBatch(landId: number, quantity: number) {
+  const contract = await getContract();
+  const tx = await contract.mintPlotBatch(landId, quantity);
+  return await tx.wait();
+}
+
 export async function deactivateLandProject(landId: number) {
   const contract = await getContract();
   const tx = await contract.deactivateLandProject(landId);
   return await tx.wait();
+}
+
+export async function holdProject(landId: number) {
+  const contract = await getContract();
+  const tx = await contract.holdProject(landId);
+  return await tx.wait();
+}
+
+export async function unholdProject(landId: number) {
+  const contract = await getContract();
+  const tx = await contract.unholdProject(landId);
+  return await tx.wait();
+}
+
+export async function deleteProject(landId: number) {
+  const contract = await getContract();
+  const tx = await contract.deleteProject(landId);
+  return await tx.wait();
+}
+
+export async function isProjectOnHold(landId: number): Promise<boolean> {
+  const contract = await getReadOnlyContract();
+  return await contract.isProjectOnHold(landId);
 }
 
 export function weiToEther(wei: bigint): string {

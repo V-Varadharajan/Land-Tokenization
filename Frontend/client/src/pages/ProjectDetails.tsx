@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import PlotGrid, { Plot } from "@/components/PlotGrid";
 import BuyPlotModal from "@/components/BuyPlotModal";
-import { ArrowLeft, MapPin, Grid3x3, DollarSign, Phone, Mail, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Grid3x3, DollarSign, Phone, Mail, Loader2, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 import { useLandProject, useProjectPlots } from "@/hooks/useBlockchainData";
-import { getContractOwner } from "@/lib/blockchain";
+import { getContractOwner, isProjectOnHold } from "@/lib/blockchain";
 import { getIpfsUrl } from "@/lib/pinata";
 
 // Default placeholder image URL
@@ -18,6 +18,7 @@ export default function ProjectDetails() {
   const [selectedPlot, setSelectedPlot] = useState<any>(null);
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [contractOwner, setContractOwner] = useState<string>("");
+  const [projectOnHold, setProjectOnHold] = useState(false);
   
   const landId = parseInt(params?.id || "0");
   const { project, loading: loadingProject } = useLandProject(landId);
@@ -39,7 +40,24 @@ export default function ProjectDetails() {
     fetchOwner();
   }, []);
 
+  useEffect(() => {
+    const checkHoldStatus = async () => {
+      if (landId > 0) {
+        try {
+          const onHold = await isProjectOnHold(landId);
+          setProjectOnHold(onHold);
+        } catch (error) {
+          console.error("Error checking hold status:", error);
+        }
+      }
+    };
+    checkHoldStatus();
+  }, [landId]);
+
   const handlePlotClick = (plot: Plot) => {
+    if (projectOnHold) {
+      return; // Don't open modal if project is on hold
+    }
     setSelectedPlot({
       tokenId: plot.tokenId,
       plotNumber: plot.plotNumber,
@@ -98,6 +116,12 @@ export default function ProjectDetails() {
                     <Badge variant="destructive">Inactive</Badge>
                   )}
                 </div>
+
+                {project.description && (
+                  <p className="text-muted-foreground mb-4">
+                    {project.description}
+                  </p>
+                )}
 
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-2 text-muted-foreground">
@@ -163,6 +187,19 @@ export default function ProjectDetails() {
               </div>
             </div>
           </div>
+
+          {projectOnHold && (
+            <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-yellow-900">Project On Hold</h3>
+                <p className="text-sm text-yellow-800 mt-1">
+                  This project has been temporarily put on hold by the owner. 
+                  Plots cannot be purchased until the project is unheld.
+                </p>
+              </div>
+            </div>
+          )}
 
           {loadingPlots ? (
             <div className="flex items-center justify-center py-12">

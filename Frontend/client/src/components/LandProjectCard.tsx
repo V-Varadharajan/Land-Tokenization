@@ -19,6 +19,7 @@ export interface LandProject {
   basePrice: string;
   imageUrl: string;
   contactNumber: string;
+  description: string;
   active: boolean;
 }
 
@@ -59,6 +60,12 @@ export default function LandProjectCard({ project, showManageButton = false }: L
       </CardHeader>
 
       <CardContent className="space-y-3">
+        {project.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {project.description}
+          </p>
+        )}
+        
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Grid3x3 className="h-4 w-4 text-muted-foreground" />
