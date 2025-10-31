@@ -77,6 +77,7 @@ export async function getNetwork() {
 }
 
 export async function getContractOwner(): Promise<string> {
+  console.log("Fetching contract owner from address:", CONTRACT_ADDRESS);
   const contract = await getReadOnlyContract();
   return await contract.owner();
 }
